@@ -4,17 +4,21 @@
 <Container>
 <Column ColumnSize="ColumnSize.Is12">
 
-<Table Bordered="true" Hoverable="true">
-    <TableHeader ThemeContrast="ThemeContrast.Dark">
+<Table  Hoverable="true">
+    <TableHeader ThemeContrast="ThemeContrast.Light">
         <TableRow>
             <TableHeaderCell><h3>Todo list  tarefas restantes: (@afazeres.Count(todo => !todo.Done))</h3></TableHeaderCell>
-            
             
         </TableRow>
     </TableHeader>
     <Addons>
         <Addon AddonType="AddonType.Body">
-            <TextEdit Placeholder="Digite o item a ser feito" @bind-Text="newTodo" />
+            
+                <Check TValue="bool" CheckedChanged="@onChangeCheck">Select All</Check>
+            
+                <TextEdit Placeholder="Digite o item a ser feito" @bind-Text="newTodo" />
+            
+            
         </Addon>
         <Addon AddonType="AddonType.End">
             <Button Color="Color.Secondary" @onclick="OnButtonClick">Add Todo</Button>
@@ -24,18 +28,15 @@
     <TableBody>
         @foreach (var todo in afazeres)
         {
-            
             <TableRow>
-                
-                <TableRowCell><Check TValue="bool" @bind-Checked="@todo.Done" Inline="true">Done</Check>@todo.Title</TableRowCell>
-                
+                <TableRowCell><Check TValue="bool" @bind-Checked="@todo.Done"  Inline="true">Done</Check>@todo.Title</TableRowCell>
             </TableRow>
-
         }
 
     </TableBody>
     <TableFooter>
-       <Buttons>
+       <Buttons  Margin="Margin.Is2.OnY">
+           @* apenas de enfeite*@
             <Button Color="Color.Secondary">All</Button>
             <Button Color="Color.Secondary">Active</Button>
             <Button Color="Color.Secondary">Completed</Button>
@@ -54,22 +55,25 @@
     
 
     private string newTodo{ get; set; }
-    public bool trocar;
-   
-    
+
     private void OnButtonClick()
     {
         if (!string.IsNullOrWhiteSpace(newTodo))
         {
             afazeres.Add(new TodoEntity { Title = newTodo });
             newTodo = string.Empty;
+            
         }
     }
 
     
+    void onChangeCheck( bool value) {
+        foreach(var todo in afazeres) {
+            todo.Done = value;
+        }
+    }
 
     
-
     public List<TodoEntity> afazeres = new List<TodoEntity>();
 }
 
